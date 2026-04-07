@@ -2,935 +2,1307 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <title>RENEWAL.LOG</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
 <style>
-/* ── RESET & BASE ─────────────────────────────────────────────────── */
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100%;font-family:'Inter',system-ui,sans-serif;font-size:14px;background:#f0f5ff;color:#0b1c30}
+:root{
+  --teal:#00685f; --teal-d:#004d47; --teal-l:#e6f4f3; --teal-m:#6bd8cb;
+  --amber:#b86e00; --amber-l:#fff5e0;
+  --red:#c0392b; --red-l:#fdecea;
+  --green:#1a7a4a; --green-l:#e6f9f1;
+  --ink:#0d1f1e; --ink2:#3d5250; --muted:#6b7c7a; --faint:#f2f6f5;
+  --border:#e2ecea; --white:#fff;
+  --fs-xs:10px; --fs-s:11px; --fs-m:13px; --fs-l:15px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(--faint);color:var(--ink);font-size:14px;overscroll-behavior:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none}
 input,select,textarea{font-family:inherit}
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
-
-/* ── MATERIAL ICONS ───────────────────────────────────────────────── */
-.mi{font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+.mi{font-family:'Material Symbols Outlined';font-style:normal;font-size:20px;line-height:1;
     font-variation-settings:'FILL' 0,'wght' 400;display:inline-block;vertical-align:middle}
 .mi.fill{font-variation-settings:'FILL' 1,'wght' 400}
+.mono{font-family:'DM Mono',monospace}
 
-/* ── HEADER ───────────────────────────────────────────────────────── */
+/* ── HEADER ── */
 #app-header{
   position:sticky;top:0;z-index:100;
-  background:rgba(240,245,255,0.92);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(0,0,0,0.06);
-  padding:14px 20px;
+  background:rgba(242,246,245,0.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
   display:flex;align-items:center;justify-content:space-between;
 }
-.logo{font-size:22px;font-weight:900;letter-spacing:-0.5px;color:#0b1c30}
-.logo span{color:#00685f}
-.logo-sub{font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#6d7a77;margin-top:1px}
-.btn-add{
-  background:#00685f;color:#fff;
-  border-radius:100px;padding:9px 20px;
-  font-size:13px;font-weight:700;
-  box-shadow:0 4px 12px rgba(0,104,95,0.25);
-  transition:opacity .15s,transform .1s;
+.logo{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--ink)}
+.logo b{color:var(--teal)}
+.logo-date{font-size:9px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-top:1px}
+.btn-add-header{
+  background:var(--teal);color:#fff;border-radius:100px;
+  padding:8px 16px;font-size:12px;font-weight:700;
+  display:flex;align-items:center;gap:5px;
+  box-shadow:0 2px 8px rgba(0,104,95,0.2);transition:opacity .15s;
 }
-.btn-add:active{opacity:.85;transform:scale(0.97)}
+.btn-add-header:active{opacity:.8}
+.btn-add-header .mi{font-size:16px}
 
-/* ── MAIN CONTENT ─────────────────────────────────────────────────── */
-#main{max-width:680px;margin:0 auto;padding:20px 16px 120px}
-
-/* ── STATS GRID ───────────────────────────────────────────────────── */
-.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
-@media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
-.stat-card{border-radius:20px;padding:18px 16px}
-.stat-card .label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:4px}
-.stat-card .value{font-size:32px;font-weight:900;line-height:1;letter-spacing:-1px}
-.stat-card .badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;margin-left:6px}
-.s-total{background:#fff;border:1px solid rgba(0,0,0,0.06)}
-.s-total .label{color:#6d7a77}.s-total .value{color:#0b1c30}
-.s-due{background:#ffdad6;border:1px solid rgba(186,26,26,0.08)}
-.s-due .label{color:#93000a}.s-due .value{color:#93000a}.s-due .badge{color:#ba1a1a}
-.s-low{background:#ffddb8;border:1px solid rgba(133,83,0,0.08)}
-.s-low .label{color:#653e00}.s-low .value{color:#653e00}
-.s-done{background:#89f5e7;border:1px solid rgba(0,104,95,0.08)}
-.s-done .label{color:#005049}.s-done .value{color:#005049}
-
-/* ── FILTER CHIPS ─────────────────────────────────────────────────── */
-.filter-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
-.filter-bar::-webkit-scrollbar{display:none}
-.chip{
-  flex-shrink:0;padding:8px 16px;border-radius:100px;
-  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
-  background:#dce9ff;color:#3d4947;
-  transition:background .15s,color .15s;
+/* ── SUMMARY STRIP ── */
+#summary-strip{
+  display:flex;background:var(--white);
+  border-bottom:1px solid var(--border);
 }
-.chip.active{background:#00685f;color:#fff}
-
-/* ── SEARCH + SORT ────────────────────────────────────────────────── */
-.controls-row{display:flex;gap:8px;margin-bottom:20px;align-items:center}
-.search-wrap{flex:1;position:relative}
-.search-wrap .mi{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#6d7a77;font-size:18px}
-.search-wrap input{
-  width:100%;background:#fff;border:1.5px solid #dce9ff;
-  border-radius:12px;padding:10px 12px 10px 38px;
-  font-size:13px;color:#0b1c30;outline:none;
-  transition:border-color .15s;
-}
-.search-wrap input:focus{border-color:#00685f}
-.search-wrap input::placeholder{color:#b0bcba}
-.sort-wrap select{
-  background:#fff;border:1.5px solid #dce9ff;border-radius:12px;
-  padding:10px 12px;font-size:12px;font-weight:700;color:#0b1c30;
-  outline:none;cursor:pointer;
-  transition:border-color .15s;
-}
-.sort-wrap select:focus{border-color:#00685f}
-
-/* ── ITEM CARDS ───────────────────────────────────────────────────── */
-#item-list{display:flex;flex-direction:column;gap:12px}
-.card{
-  background:#fff;border-radius:20px;
-  border-left:4px solid #bcc9c6;
-  box-shadow:0 2px 8px rgba(11,28,48,0.06);
-  overflow:hidden;
-  transition:box-shadow .15s;
-}
-.card:hover{box-shadow:0 4px 16px rgba(11,28,48,0.1)}
-.card.overdue{border-left-color:#ba1a1a}
-.card.upcoming{border-left-color:#00685f}
-.card.done{border-left-color:#6bd8cb;opacity:0.8}
-.card.lowstock{border-left-color:#855300}
-
-.card-inner{padding:16px}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.card-icon-wrap{
-  width:46px;height:46px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;background:#e5eeff;
-}
-.card-icon-wrap .mi{font-size:22px;color:#00685f}
-.card.overdue .card-icon-wrap{background:#ffdad6}
-.card.overdue .card-icon-wrap .mi{color:#ba1a1a}
-.card.done .card-icon-wrap .mi{color:#005049;opacity:0.7}
-
-.card-info{flex:1;min-width:0}
-.card-name{font-size:15px;font-weight:700;color:#0b1c30;margin-bottom:4px}
-.card.done .card-name{color:#6d7a77}
-.badge-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
-.badge{
-  display:inline-block;font-size:9px;font-weight:800;
-  text-transform:uppercase;letter-spacing:0.07em;
-  padding:2px 7px;border-radius:6px;
-}
-.badge-overdue{background:#ba1a1a;color:#fff}
-.badge-done{background:#89f5e7;color:#005049}
-.badge-upcoming{background:#e5eeff;color:#005049}
-.badge-period{background:#f0f5ff;color:#6d7a77;border:1px solid #dce9ff}
-.badge-oos{background:#ffdad6;color:#93000a}
-.badge-low{background:#ffddb8;color:#653e00}
-
-.card-meta{font-size:11px;color:#6d7a77;font-weight:500}
-.card-next{font-size:11px;color:#00685f;font-weight:700;margin-top:2px}
-
-.card-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0}
-.icon-btn{
-  width:32px;height:32px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  background:#f0f5ff;color:#6d7a77;
-  transition:background .15s,color .15s;
-}
-.icon-btn:hover{background:#dce9ff;color:#00685f}
-.icon-btn.danger:hover{background:#ffdad6;color:#ba1a1a}
-.icon-btn .mi{font-size:17px}
-
-/* ── STOCK SECTION ────────────────────────────────────────────────── */
-.stock-section{
-  background:#f0f5ff;border-radius:14px;
-  padding:12px 14px;margin-top:12px;
-}
-.stock-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.stock-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6d7a77}
-.stock-label.low{color:#855300}
-.stock-label.oos{color:#ba1a1a}
-.stock-controls{display:flex;align-items:center;gap:10px}
-.stock-btn{
-  width:28px;height:28px;border-radius:50%;
-  background:#dce9ff;color:#0b1c30;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:700;line-height:1;
-  transition:background .12s;flex-shrink:0;
-}
-.stock-btn:hover{background:#00685f;color:#fff}
-.stock-btn:active{transform:scale(0.92)}
-.stock-num{font-size:15px;font-weight:800;color:#0b1c30;min-width:22px;text-align:center}
-.stock-num.low{color:#855300}
-.stock-num.oos{color:#ba1a1a}
-.progress-bar{height:6px;background:#dce9ff;border-radius:100px;overflow:hidden}
-.progress-fill{height:100%;border-radius:100px;background:#00685f;transition:width .3s}
-.progress-fill.low{background:#855300}
-.progress-fill.oos{background:#ba1a1a;width:0%!important}
-
-/* ── MARK DONE BUTTON ─────────────────────────────────────────────── */
-.mark-done-wrap{padding:12px 16px 16px}
-.btn-mark-done{
-  width:100%;padding:13px;border-radius:14px;
-  background:linear-gradient(135deg,#00685f,#008378);
-  color:#fff;font-size:13px;font-weight:700;
-  box-shadow:0 4px 12px rgba(0,104,95,0.25);
-  transition:opacity .15s,transform .1s;
-}
-.btn-mark-done:active{opacity:.85;transform:scale(0.98)}
-
-/* ── EMPTY STATE ──────────────────────────────────────────────────── */
-.empty-state{
-  text-align:center;padding:60px 20px;
-}
-.empty-icon{
-  width:72px;height:72px;background:#dce9ff;border-radius:22px;
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 16px;
-}
-.empty-icon .mi{font-size:34px;color:#6d7a77}
-.empty-title{font-size:16px;font-weight:700;color:#0b1c30;margin-bottom:6px}
-.empty-sub{font-size:13px;color:#6d7a77}
-
-/* ── BOTTOM NAV ───────────────────────────────────────────────────── */
-#bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:rgba(255,255,255,0.88);backdrop-filter:blur(18px);
-  border-top:1px solid rgba(0,0,0,0.06);
-  display:flex;justify-content:space-around;
-  padding:10px 0 max(18px,env(safe-area-inset-bottom));
-}
-.nav-item{
-  display:flex;flex-direction:column;align-items:center;
-  gap:3px;padding:6px 18px;border-radius:14px;
-  color:#6d7a77;transition:color .15s;
-  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
-}
-.nav-item.active{color:#00685f;background:rgba(0,104,95,0.08)}
-.nav-item .mi{font-size:22px}
-.nav-item.active .mi{font-variation-settings:'FILL' 1,'wght' 400}
-
-/* ── FAB ──────────────────────────────────────────────────────────── */
-#fab{
-  position:fixed;right:18px;bottom:90px;z-index:101;
-  width:52px;height:52px;border-radius:16px;
-  background:linear-gradient(135deg,#00685f,#008378);
-  color:#fff;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 18px rgba(0,104,95,0.35);
-  transition:transform .15s,box-shadow .15s;
-}
-#fab:hover{transform:scale(1.06)}
-#fab:active{transform:scale(0.94)}
-#fab .mi{font-size:24px}
-@media(min-width:640px){#fab{display:none}}
-
-/* ── OVERLAY / MODAL ─────────────────────────────────────────────── */
-.overlay{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(11,28,48,0.5);backdrop-filter:blur(4px);
-  display:flex;align-items:flex-end;justify-content:center;
-}
-@media(min-width:580px){.overlay{align-items:center}}
-.modal{
-  background:#fff;width:100%;max-width:540px;
-  border-radius:28px 28px 0 0;
-  max-height:92dvh;overflow-y:auto;
-  padding:10px 0 0;
-}
-@media(min-width:580px){.modal{border-radius:28px;max-height:88dvh}}
-.modal-drag{width:40px;height:4px;background:#dce9ff;border-radius:100px;margin:0 auto 18px}
-@media(min-width:580px){.modal-drag{display:none}}
-.modal-inner{padding:0 20px 32px}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
-.modal-title{font-size:19px;font-weight:800;color:#0b1c30;letter-spacing:-0.3px}
-.btn-close{
-  width:34px;height:34px;border-radius:10px;
-  background:#f0f5ff;color:#6d7a77;
-  display:flex;align-items:center;justify-content:center;
-}
-.btn-close:hover{background:#dce9ff}
-.btn-close .mi{font-size:18px}
-
-/* Form elements */
-.form-group{margin-bottom:16px}
-.form-label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#6d7a77;margin-bottom:7px}
-.form-input{
-  width:100%;background:#f0f5ff;border:2px solid transparent;
-  border-radius:13px;padding:11px 14px;
-  font-size:13px;color:#0b1c30;outline:none;
-  transition:border-color .15s,background .15s;
-}
-.form-input:focus{border-color:#00685f;background:#fff}
-.form-input::placeholder{color:#b0bcba}
-.form-input.error{border-color:#ba1a1a;background:#fff8f8}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-/* Category grid */
-.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.cat-btn{
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  padding:10px 6px;border-radius:14px;
-  background:#f0f5ff;border:2px solid transparent;
-  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6d7a77;
-  transition:all .15s;
-}
-.cat-btn .mi{font-size:22px;color:#6d7a77}
-.cat-btn:hover{background:#dce9ff;border-color:#bcc9c6}
-.cat-btn.active{background:#e8f8f6;border-color:#00685f;color:#005049}
-.cat-btn.active .mi{color:#00685f;font-variation-settings:'FILL' 1,'wght' 400}
-
-/* Modal footer */
-.modal-footer{display:flex;gap:10px;margin-top:20px}
-.btn-cancel{
-  flex:1;padding:13px;border-radius:14px;
-  background:#f0f5ff;color:#6d7a77;
-  font-size:13px;font-weight:700;
+.sum-item{
+  flex:1;padding:10px 6px;text-align:center;
+  border-right:1px solid var(--border);cursor:pointer;
   transition:background .15s;
 }
-.btn-cancel:hover{background:#dce9ff}
-.btn-save{
-  flex:1;padding:13px;border-radius:14px;
-  background:linear-gradient(135deg,#00685f,#008378);
-  color:#fff;font-size:13px;font-weight:700;
-  box-shadow:0 4px 12px rgba(0,104,95,0.25);
+.sum-item:last-child{border-right:none}
+.sum-item:active{background:var(--faint)}
+.sum-n{font-size:20px;font-weight:800;line-height:1;letter-spacing:-0.5px}
+.sum-l{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-top:2px}
+.sum-item.s-red .sum-n{color:var(--red)}
+.sum-item.s-amber .sum-n{color:var(--amber)}
+.sum-item.s-teal .sum-n{color:var(--teal)}
+.sum-item.s-ink .sum-n{color:var(--ink)}
+
+/* ── PAGES ── */
+.page{display:none;padding-bottom:80px}
+.page.active{display:block}
+
+/* ── FILTER BAR ── */
+#filter-bar{
+  display:flex;gap:6px;padding:10px 12px;
+  background:var(--white);border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;position:sticky;top:57px;z-index:90;
+}
+#filter-bar::-webkit-scrollbar{display:none}
+.fchip{
+  flex-shrink:0;padding:5px 12px;border-radius:100px;
+  font-size:11px;font-weight:600;background:var(--faint);
+  color:var(--muted);border:1px solid var(--border);
+  transition:all .15s;white-space:nowrap;
+}
+.fchip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fchip.red.active{background:var(--red);border-color:var(--red)}
+.fchip.amber.active{background:var(--amber);border-color:var(--amber)}
+.fchip.teal.active{background:var(--teal);border-color:var(--teal)}
+
+/* ── SEARCH ROW ── */
+#search-row{
+  padding:8px 12px;background:var(--white);
+  border-bottom:1px solid var(--border);
+  display:flex;gap:8px;align-items:center;
+}
+.search-inner{position:relative;flex:1}
+.search-inner .mi{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--muted)}
+.search-inner input{
+  width:100%;background:var(--faint);border:1.5px solid transparent;
+  border-radius:10px;padding:8px 10px 8px 32px;
+  font-size:13px;color:var(--ink);outline:none;transition:border-color .15s;
+}
+.search-inner input:focus{border-color:var(--teal);background:var(--white)}
+.search-inner input::placeholder{color:#b0bfbd}
+#sort-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--faint);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);flex-shrink:0;transition:all .15s;
+}
+#sort-btn.active{background:var(--teal-l);border-color:var(--teal);color:var(--teal)}
+#sort-btn .mi{font-size:18px}
+.sort-dropdown{
+  position:absolute;right:12px;top:100%;margin-top:4px;
+  background:var(--white);border:1px solid var(--border);border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:200;overflow:hidden;
+  display:none;min-width:160px;
+}
+.sort-dropdown.open{display:block}
+.sort-opt{
+  padding:11px 16px;font-size:13px;font-weight:500;color:var(--ink2);
+  cursor:pointer;transition:background .1s;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sort-opt:hover{background:var(--faint)}
+.sort-opt.active{color:var(--teal);font-weight:700}
+.sort-opt.active::after{content:'✓';color:var(--teal);font-weight:800}
+
+/* ── SECTION HEADER ── */
+.list-section{
+  padding:10px 14px 5px;
+  font-size:9px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.18em;color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+  background:var(--faint);
+  position:sticky;top:137px;z-index:80;
+  border-bottom:1px solid var(--border);
+}
+.list-section .sec-count{
+  background:var(--muted);color:#fff;border-radius:100px;
+  font-size:8px;font-weight:800;padding:1px 6px;
+}
+.list-section.red{color:var(--red)}
+.list-section.red .sec-count{background:var(--red)}
+.list-section.amber{color:var(--amber)}
+.list-section.amber .sec-count{background:var(--amber)}
+.list-section.teal{color:var(--teal)}
+.list-section.teal .sec-count{background:var(--teal)}
+
+/* ── LIST ITEMS ── */
+.list-wrap{background:var(--white)}
+.list-item-outer{
+  position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border);
+}
+.list-item-outer:last-child{border-bottom:none}
+
+/* Swipe track */
+.item-track{
+  display:flex;transition:transform .25s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+.item-main{
+  flex-shrink:0;width:100%;
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;background:var(--white);
+  transition:background .15s;
+}
+.item-main:active{background:var(--faint)}
+
+/* Checkbox circle */
+.check-circle{
+  width:24px;height:24px;border-radius:50%;
+  border:2px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;
+}
+.check-circle.overdue{border-color:var(--red)}
+.check-circle.done{background:var(--teal);border-color:var(--teal)}
+.check-circle.done .mi{font-size:14px;color:#fff;font-variation-settings:'FILL' 1,'wght' 400}
+.check-circle .mi{font-size:0;color:transparent;transition:all .2s}
+
+/* Cat icon — tiny */
+.cat-dot{
+  width:28px;height:28px;border-radius:8px;background:var(--faint);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;
+}
+.cat-dot.red{background:var(--red-l)}
+.cat-dot.amber{background:var(--amber-l)}
+.cat-dot.teal{background:var(--teal-l)}
+
+/* Item text */
+.item-text{flex:1;min-width:0}
+.item-name{font-size:13px;font-weight:600;color:var(--ink);line-height:1.25}
+.item-name.done{color:var(--muted);text-decoration:line-through}
+.item-sub{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Right side badges */
+.item-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.due-pill{
+  font-size:10px;font-weight:700;padding:2px 8px;
+  border-radius:100px;white-space:nowrap;
+}
+.dp-red{background:var(--red-l);color:var(--red)}
+.dp-amber{background:var(--amber-l);color:var(--amber)}
+.dp-teal{background:var(--teal-l);color:var(--teal)}
+.dp-grey{background:var(--faint);color:var(--muted);border:1px solid var(--border)}
+.dp-green{background:var(--green-l);color:var(--green)}
+.stock-tag{
+  font-size:10px;font-weight:700;font-family:'DM Mono',monospace;
+  color:var(--muted);display:flex;align-items:center;gap:2px;
+}
+.stock-tag.low{color:var(--amber)}
+.stock-tag.oos{color:var(--red)}
+.stock-tag .mi{font-size:12px}
+.chevron-right{color:var(--border);font-size:16px;flex-shrink:0}
+
+/* Swipe actions panel */
+.swipe-actions{
+  display:flex;flex-shrink:0;width:140px;
+}
+.swipe-action-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;
   transition:opacity .15s;
 }
-.btn-save:hover{opacity:.9}
-.btn-save:active{opacity:.8;transform:scale(0.98)}
+.swipe-action-btn:active{opacity:.8}
+.swipe-action-btn .mi{font-size:20px}
+.sab-done{background:var(--teal);color:#fff}
+.sab-undo{background:var(--amber);color:#fff}
+.sab-delete{background:var(--red);color:#fff}
+.sab-edit{background:var(--ink2);color:#fff}
+
+/* Expanded detail row */
+.item-detail{
+  display:none;background:var(--faint);
+  padding:10px 14px 12px;border-top:1px solid var(--border);
+}
+.item-detail.open{display:block}
+.detail-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.detail-row:last-child{margin-bottom:0}
+.detail-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted)}
+.detail-val{font-size:12px;font-weight:600;color:var(--ink2)}
+.stock-controls{display:flex;align-items:center;gap:8px}
+.stock-ctrl-btn{
+  width:26px;height:26px;border-radius:50%;background:var(--white);
+  border:1.5px solid var(--border);display:flex;align-items:center;
+  justify-content:center;font-size:16px;font-weight:700;color:var(--ink2);
+  transition:all .15s;
+}
+.stock-ctrl-btn:active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.stock-val{font-size:14px;font-weight:800;min-width:22px;text-align:center;font-family:'DM Mono',monospace}
+.stock-val.low{color:var(--amber)}
+.stock-val.oos{color:var(--red)}
+.sched-strip{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+.sched-chip{
+  font-size:10px;font-weight:600;padding:3px 8px;
+  border-radius:6px;background:var(--white);
+  border:1px solid var(--border);color:var(--muted);
+}
+.sched-chip.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.sched-chip.overdue{background:var(--red-l);color:var(--red);border-color:rgba(192,57,43,.2)}
+.detail-actions{display:flex;gap:6px;margin-top:10px}
+.det-btn{
+  flex:1;padding:9px;border-radius:10px;
+  font-size:12px;font-weight:700;text-align:center;cursor:pointer;
+  transition:opacity .15s;
+}
+.det-btn:active{opacity:.8}
+.det-done{background:var(--teal);color:#fff}
+.det-undo{background:var(--amber-l);color:var(--amber);border:1px solid rgba(184,110,0,.2)}
+.det-edit{background:var(--faint);color:var(--ink2);border:1px solid var(--border)}
+.det-del{background:var(--red-l);color:var(--red);border:1px solid rgba(192,57,43,.15)}
+.notes-line{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  text-align:center;padding:56px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.empty-icon{width:60px;height:60px;border-radius:18px;background:var(--border);
+  display:flex;align-items:center;justify-content:center}
+.empty-icon .mi{font-size:28px;color:var(--muted)}
+.empty-title{font-size:15px;font-weight:700}
+.empty-sub{font-size:12px;color:var(--muted)}
+
+/* ── FAB ── */
+#fab{
+  position:fixed;right:16px;bottom:76px;z-index:101;
+  width:50px;height:50px;border-radius:14px;
+  background:linear-gradient(135deg,var(--teal),#008f84);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,104,95,0.35);
+  transition:transform .15s;
+}
+#fab:active{transform:scale(0.93)}
+#fab .mi{font-size:24px}
+#fab.hidden{display:none}
+
+/* ── BOTTOM NAV ── */
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;
+  padding:8px 0 max(16px,env(safe-area-inset-bottom));
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:4px 16px;border-radius:12px;color:var(--muted);cursor:pointer;
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
+  transition:all .15s;
+}
+.nav-item .mi{font-size:22px}
+.nav-item.active{color:var(--teal)}
+.nav-item.active .mi{font-variation-settings:'FILL' 1,'wght' 400}
+
+/* ── MODALS ── */
+.overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(13,31,30,0.5);backdrop-filter:blur(4px);
+  display:flex;align-items:flex-end;justify-content:center;
+}
+@media(min-width:560px){.overlay{align-items:center}}
+.modal{
+  background:var(--white);width:100%;max-width:500px;
+  border-radius:24px 24px 0 0;max-height:92dvh;overflow-y:auto;
+}
+@media(min-width:560px){.modal{border-radius:24px;max-height:88dvh}}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:100px;margin:12px auto 0}
+@media(min-width:560px){.modal-handle{display:none}}
+.modal-inner{padding:16px 18px 32px}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-hdr h2{font-size:18px;font-weight:800;letter-spacing:-0.3px}
+.btn-close{
+  width:32px;height:32px;border-radius:8px;background:var(--faint);
+  color:var(--muted);display:flex;align-items:center;justify-content:center;
+}
+.btn-close .mi{font-size:17px}
+
+/* Form */
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:6px}
+.fl .fh{font-weight:500;text-transform:none;letter-spacing:0;color:#c0cfcd;margin-left:4px}
+.fi{
+  width:100%;background:var(--faint);border:2px solid transparent;
+  border-radius:12px;padding:10px 13px;font-size:13px;color:var(--ink);
+  outline:none;transition:all .15s;
+}
+.fi:focus{border-color:var(--teal);background:var(--white)}
+.fi::placeholder{color:#b0bfbd}
+.fi.err{border-color:var(--red)}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.cat-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:9px 4px;border-radius:12px;background:var(--faint);
+  border:2px solid transparent;font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);
+  cursor:pointer;transition:all .15s;
+}
+.cat-btn .mi{font-size:20px;color:var(--muted)}
+.cat-btn.active{background:var(--teal-l);border-color:var(--teal);color:var(--teal)}
+.cat-btn.active .mi{color:var(--teal);font-variation-settings:'FILL' 1,'wght' 400}
+.sched-preview{background:var(--faint);border-radius:12px;padding:12px;margin-top:4px}
+.sp-title{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:8px}
+.sp-dates{display:flex;gap:5px;flex-wrap:wrap}
+.sp-date{font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;border:1.5px solid var(--border);background:var(--white);color:var(--ink2)}
+.sp-date.first{background:var(--teal);color:#fff;border-color:var(--teal)}
+.mf{display:flex;gap:8px;margin-bottom:14px}
+.mf>.fg{flex:1;margin-bottom:0}
+.modal-foot{display:flex;gap:8px;margin-top:18px}
+.btn-c{flex:1;padding:12px;border-radius:12px;background:var(--faint);color:var(--muted);font-size:13px;font-weight:700;transition:background .15s}
+.btn-c:hover{background:var(--border)}
+.btn-s{flex:1;padding:12px;border-radius:12px;background:var(--teal);color:#fff;font-size:13px;font-weight:700;box-shadow:0 3px 10px rgba(0,104,95,.22);transition:opacity .15s}
+.btn-s:active{opacity:.85}
 
 /* Delete confirm */
-.del-modal{
-  background:#fff;width:100%;max-width:340px;
-  border-radius:24px;padding:28px 24px;text-align:center;
+.del-modal{background:var(--white);width:100%;max-width:320px;border-radius:22px;padding:24px 20px;text-align:center}
+.del-i{width:52px;height:52px;background:var(--red-l);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.del-i .mi{font-size:24px;color:var(--red);font-variation-settings:'FILL' 1,'wght' 400}
+.del-t{font-size:16px;font-weight:800;margin-bottom:5px}
+.del-s{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.del-btns{display:flex;gap:8px}
+.btn-del-no{flex:1;padding:11px;border-radius:11px;background:var(--faint);color:var(--muted);font-size:13px;font-weight:700}
+.btn-del-yes{flex:1;padding:11px;border-radius:11px;background:var(--red);color:#fff;font-size:13px;font-weight:700}
+
+/* ── ANALYTICS ── */
+.analytics-body{padding:16px 14px 0}
+.a-section{margin-bottom:20px}
+.a-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted);margin-bottom:10px}
+.a-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.a-card{background:var(--white);border-radius:14px;padding:14px;border:1px solid var(--border)}
+.a-num{font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1}
+.a-lbl{font-size:10px;color:var(--muted);margin-top:3px}
+.a-card .bar{height:4px;border-radius:100px;background:var(--border);margin-top:10px;overflow:hidden}
+.a-card .bar-fill{height:100%;border-radius:100px;background:var(--teal)}
+.chart-card{background:var(--white);border-radius:14px;padding:14px;border:1px solid var(--border);margin-bottom:10px}
+.chart-card h3{font-size:12px;font-weight:700;margin-bottom:12px}
+.hbar{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.hbar-label{font-size:11px;color:var(--ink2);width:64px;flex-shrink:0;text-align:right}
+.hbar-track{flex:1;height:8px;background:var(--faint);border-radius:100px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:100px;background:var(--teal)}
+.hbar-n{font-size:10px;font-weight:700;color:var(--muted);width:18px}
+.timeline-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--faint)}
+.tl-date{font-size:11px;font-weight:700;color:var(--ink2);width:44px;flex-shrink:0;font-family:'DM Mono',monospace}
+.tl-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.tl-dot.red{background:var(--red)}.tl-dot.amber{background:var(--amber)}
+.tl-name{font-size:12px;font-weight:600;flex:1;color:var(--ink)}
+.tl-sub{font-size:10px;color:var(--muted)}
+canvas{display:block}
+.donut-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.legend{display:flex;flex-direction:column;gap:6px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink2)}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+/* ── SCHEDULE ── */
+.schedule-body{padding:12px 14px 0}
+.sched-group{margin-bottom:18px}
+.sched-date-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sched-bubble{
+  background:var(--teal);color:#fff;border-radius:10px;
+  padding:4px 12px;font-size:10px;font-weight:800;
+  text-transform:uppercase;letter-spacing:0.08em;
 }
-.del-icon{
-  width:56px;height:56px;background:#ffdad6;border-radius:16px;
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 14px;
+.sched-bubble.red{background:var(--red)}
+.sched-bubble.amber{background:var(--amber)}
+.sched-bubble.grey{background:var(--muted)}
+.sched-days{font-size:11px;font-weight:600;color:var(--muted)}
+.sched-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;background:var(--white);
+  border-radius:12px;margin-bottom:6px;
+  border-left:3px solid var(--border);
 }
-.del-icon .mi{font-size:26px;color:#ba1a1a;font-variation-settings:'FILL' 1,'wght' 400}
-.del-title{font-size:17px;font-weight:800;color:#0b1c30;margin-bottom:6px}
-.del-sub{font-size:13px;color:#6d7a77;margin-bottom:22px}
-.del-btns{display:flex;gap:10px}
-.btn-del-cancel{flex:1;padding:12px;border-radius:12px;background:#f0f5ff;color:#6d7a77;font-size:13px;font-weight:700}
-.btn-del-confirm{flex:1;padding:12px;border-radius:12px;background:#ba1a1a;color:#fff;font-size:13px;font-weight:700}
-.btn-del-confirm:active{opacity:.85}
+.sched-item.red{border-left-color:var(--red)}
+.sched-item.amber{border-left-color:var(--amber)}
+.sched-item.teal{border-left-color:var(--teal-m)}
+.sched-cat{font-size:16px;width:30px;flex-shrink:0}
+.sched-info{flex:1;min-width:0}
+.sched-name{font-size:13px;font-weight:600;color:var(--ink)}
+.sched-meta{font-size:10px;color:var(--muted);margin-top:1px}
+.sched-bdg{flex-shrink:0}
+.sbadge{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+.sb-red{background:var(--red-l);color:var(--red)}
+.sb-amber{background:var(--amber-l);color:var(--amber)}
+.sb-teal{background:var(--teal-l);color:var(--teal)}
+.sb-done{background:var(--green-l);color:var(--green)}
+
+/* ── SETTINGS ── */
+.settings-body{padding:14px}
+.sett-section{margin-bottom:22px}
+.sett-section-title{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.18em;color:var(--muted);margin-bottom:10px;padding:0 2px}
+.sett-card{background:var(--white);border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.sett-row{display:flex;align-items:center;padding:14px;border-bottom:1px solid var(--faint);gap:12px}
+.sett-row:last-child{border-bottom:none}
+.sett-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sett-icon .mi{font-size:19px}
+.si-teal{background:var(--teal-l)}.si-teal .mi{color:var(--teal)}
+.si-amber{background:var(--amber-l)}.si-amber .mi{color:var(--amber)}
+.si-red{background:var(--red-l)}.si-red .mi{color:var(--red)}
+.si-blue{background:#e3eeff}.si-blue .mi{color:#1a6bc0}
+.si-purple{background:#f0e8ff}.si-purple .mi{color:#6b35a0}
+.sett-text{flex:1}
+.sett-title{font-size:13px;font-weight:600;color:var(--ink)}
+.sett-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.tog-sl{position:absolute;inset:0;background:var(--border);border-radius:100px;cursor:pointer;transition:background .2s}
+.tog-sl:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.toggle input:checked+.tog-sl{background:var(--teal)}
+.toggle input:checked+.tog-sl:before{transform:translateX(20px)}
+.sett-select{background:var(--faint);border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:var(--ink);outline:none;cursor:pointer}
+.btn-sett{padding:7px 14px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn-sett:active{opacity:.7}
+.bs-teal{background:var(--teal-l);color:var(--teal)}
+.bs-blue{background:#e3eeff;color:#1a6bc0}
+.bs-red{background:var(--red-l);color:var(--red)}
+.thresh-in{width:52px;background:var(--faint);border:1.5px solid transparent;border-radius:8px;padding:5px 8px;font-size:12px;font-weight:700;text-align:center;outline:none}
+.thresh-in:focus{border-color:var(--teal)}
+.about-box{background:var(--white);border-radius:16px;padding:18px;text-align:center;border:1px solid var(--border)}
+.about-logo{font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px}
+.about-logo b{color:var(--teal)}
+.about-ver{font-size:11px;color:var(--muted);margin-bottom:6px}
+.about-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:88px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:9px 18px;border-radius:100px;
+  font-size:12px;font-weight:600;z-index:500;
+  opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;
+}
+#toast.show{opacity:1}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header id="app-header">
   <div>
-    <div class="logo">RENEWAL<span>.</span>LOG</div>
-    <div class="logo-sub" id="date-label"></div>
+    <div class="logo">RENEWAL<b>.</b>LOG</div>
+    <div class="logo-date" id="date-label"></div>
   </div>
-  <button class="btn-add" onclick="openAdd()">+ Add Item</button>
+  <button class="btn-add-header" id="header-cta" onclick="openAdd()">
+    <span class="mi">add</span> Add Item
+  </button>
 </header>
 
-<!-- MAIN -->
-<div id="main">
+<div id="summary-strip">
+  <div class="sum-item s-red" onclick="jumpFilter('Overdue')">
+    <div class="sum-n" id="sum-overdue">0</div><div class="sum-l">Overdue</div>
+  </div>
+  <div class="sum-item s-amber" onclick="jumpFilter('Due Soon')">
+    <div class="sum-n" id="sum-soon">0</div><div class="sum-l">Due Soon</div>
+  </div>
+  <div class="sum-item s-teal" onclick="jumpFilter('Done')">
+    <div class="sum-n" id="sum-done">0</div><div class="sum-l">Done</div>
+  </div>
+  <div class="sum-item s-ink" onclick="jumpFilter('All')">
+    <div class="sum-n" id="sum-total">0</div><div class="sum-l">Total</div>
+  </div>
+</div>
 
-  <!-- STATS -->
-  <div class="stats-grid">
-    <div class="stat-card s-total">
-      <div class="label">Total Items</div>
-      <div class="value" id="s-total">0</div>
+<!-- INVENTORY PAGE -->
+<div class="page active" id="page-inventory">
+  <div id="filter-bar">
+    <div class="fchip active" data-filter="All" onclick="setFilter(this)">All</div>
+    <div class="fchip red" data-filter="Overdue" onclick="setFilter(this)">Overdue</div>
+    <div class="fchip amber" data-filter="Due Soon" onclick="setFilter(this)">Due Soon</div>
+    <div class="fchip teal" data-filter="Done" onclick="setFilter(this)">Done</div>
+    <div class="fchip" data-filter="Low Stock" onclick="setFilter(this)">Low Stock</div>
+  </div>
+  <div id="search-row" style="position:relative">
+    <div class="search-inner">
+      <span class="mi">search</span>
+      <input id="search-input" type="text" placeholder="Search items…" oninput="renderInventory()"/>
     </div>
-    <div class="stat-card s-due">
-      <div class="label">Due Now</div>
-      <div style="display:flex;align-items:baseline;gap:6px">
-        <div class="value" id="s-due">0</div>
-        <span class="badge" id="s-due-badge" style="color:#ba1a1a"></span>
+    <button id="sort-btn" onclick="toggleSort(event)"><span class="mi">sort</span></button>
+    <div class="sort-dropdown" id="sort-dropdown">
+      <div class="sort-opt active" data-sort="due" onclick="setSort(this)">Due Date</div>
+      <div class="sort-opt" data-sort="name" onclick="setSort(this)">Name A→Z</div>
+      <div class="sort-opt" data-sort="stock" onclick="setSort(this)">Stock Level</div>
+      <div class="sort-opt" data-sort="freq" onclick="setSort(this)">Frequency</div>
+      <div class="sort-opt" data-sort="status" onclick="setSort(this)">Status</div>
+    </div>
+  </div>
+  <div id="item-list"></div>
+</div>
+
+<!-- ANALYTICS PAGE -->
+<div class="page" id="page-analytics">
+  <div class="analytics-body">
+    <div class="a-grid">
+      <div class="a-card">
+        <div class="a-num" id="a-rate" style="color:var(--teal)">0%</div>
+        <div class="a-lbl">Completion rate</div>
+        <div class="bar"><div class="bar-fill" id="a-rate-bar" style="width:0%"></div></div>
+      </div>
+      <div class="a-card">
+        <div class="a-num" id="a-overdue" style="color:var(--red)">0</div>
+        <div class="a-lbl">Overdue items</div>
+      </div>
+      <div class="a-card">
+        <div class="a-num" id="a-week" style="color:var(--amber)">0</div>
+        <div class="a-lbl">Due this week</div>
+      </div>
+      <div class="a-card">
+        <div class="a-num" id="a-stock-n">0</div>
+        <div class="a-lbl">Tracked stock</div>
       </div>
     </div>
-    <div class="stat-card s-low">
-      <div class="label">Low Stock</div>
-      <div class="value" id="s-low">0</div>
+    <div class="chart-card">
+      <h3>Items by Category</h3>
+      <div id="cat-chart"></div>
     </div>
-    <div class="stat-card s-done">
-      <div class="label">Done</div>
-      <div class="value" id="s-done">0</div>
+    <div class="chart-card">
+      <h3>Stock Health</h3>
+      <div class="donut-row">
+        <canvas id="donut-cv" width="110" height="110"></canvas>
+        <div class="legend" id="donut-leg"></div>
+      </div>
     </div>
-  </div>
-
-  <!-- FILTERS -->
-  <div class="filter-bar" id="filter-bar">
-    <button class="chip active" data-filter="All"       onclick="setFilter(this)">All</button>
-    <button class="chip"        data-filter="Due"       onclick="setFilter(this)">Due</button>
-    <button class="chip"        data-filter="Upcoming"  onclick="setFilter(this)">Upcoming</button>
-    <button class="chip"        data-filter="Done"      onclick="setFilter(this)">Done</button>
-    <button class="chip"        data-filter="Low Stock" onclick="setFilter(this)">Low Stock</button>
-  </div>
-
-  <!-- SEARCH + SORT -->
-  <div class="controls-row">
-    <div class="search-wrap">
-      <span class="mi">search</span>
-      <input id="search-input" type="text" placeholder="Search items or notes…" oninput="render()"/>
-    </div>
-    <div class="sort-wrap">
-      <select id="sort-select" onchange="render()">
-        <option value="due">Due Date</option>
-        <option value="name">Name</option>
-        <option value="stock">Stock</option>
-        <option value="period">Period</option>
-        <option value="status">Status</option>
-      </select>
+    <div class="chart-card" style="margin-bottom:0">
+      <h3>Next 30 Days</h3>
+      <div id="tl-list"></div>
     </div>
   </div>
+</div>
 
-  <!-- ITEM LIST -->
-  <div id="item-list"></div>
+<!-- SCHEDULE PAGE -->
+<div class="page" id="page-schedule">
+  <div class="schedule-body" id="schedule-body"></div>
+</div>
 
-</div><!-- /main -->
+<!-- SETTINGS PAGE -->
+<div class="page" id="page-settings">
+  <div class="settings-body">
+    <div class="sett-section">
+      <div class="sett-section-title">Preferences</div>
+      <div class="sett-card">
+        <div class="sett-row"><div class="sett-icon si-teal"><span class="mi">notifications</span></div><div class="sett-text"><div class="sett-title">Highlight Due Soon</div><div class="sett-sub">Items due within 7 days</div></div><label class="toggle"><input type="checkbox" id="pref-upcoming" checked onchange="savePref()"/><span class="tog-sl"></span></label></div>
+        <div class="sett-row"><div class="sett-icon si-blue"><span class="mi">done_all</span></div><div class="sett-text"><div class="sett-title">Auto-decrement Stock</div><div class="sett-sub">Reduce by 1 on Mark Done</div></div><label class="toggle"><input type="checkbox" id="pref-autodec" checked onchange="savePref()"/><span class="tog-sl"></span></label></div>
+        <div class="sett-row"><div class="sett-icon si-teal"><span class="mi">calendar_view_week</span></div><div class="sett-text"><div class="sett-title">Show Schedule in Detail</div><div class="sett-sub">Next 3 dates when item is expanded</div></div><label class="toggle"><input type="checkbox" id="pref-sched" checked onchange="savePref()"/><span class="tog-sl"></span></label></div>
+        <div class="sett-row"><div class="sett-icon si-purple"><span class="mi">swap_vert</span></div><div class="sett-text"><div class="sett-title">Default Sort</div></div><select class="sett-select" id="pref-sort" onchange="savePref()"><option value="due">Due Date</option><option value="name">Name</option><option value="status">Status</option><option value="freq">Frequency</option></select></div>
+        <div class="sett-row"><div class="sett-icon si-amber"><span class="mi">warning</span></div><div class="sett-text"><div class="sett-title">Default Stock Alert ≤</div></div><input type="number" class="thresh-in" id="pref-thresh" value="1" min="0" onchange="savePref()"/></div>
+      </div>
+    </div>
+    <div class="sett-section">
+      <div class="sett-section-title">Data</div>
+      <div class="sett-card">
+        <div class="sett-row"><div class="sett-icon si-teal"><span class="mi">file_download</span></div><div class="sett-text"><div class="sett-title">Export Backup</div><div class="sett-sub">Save as JSON file</div></div><button class="btn-sett bs-teal" onclick="exportData()">Export</button></div>
+        <div class="sett-row"><div class="sett-icon si-blue"><span class="mi">file_upload</span></div><div class="sett-text"><div class="sett-title">Import Backup</div><div class="sett-sub">Restore from JSON</div></div><button class="btn-sett bs-blue" onclick="document.getElementById('imp-file').click()">Import</button><input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)"/></div>
+        <div class="sett-row"><div class="sett-icon si-teal"><span class="mi">refresh</span></div><div class="sett-text"><div class="sett-title">Reset Sample Data</div></div><button class="btn-sett bs-blue" onclick="resetSample()">Reset</button></div>
+        <div class="sett-row"><div class="sett-icon si-red"><span class="mi">delete_forever</span></div><div class="sett-text"><div class="sett-title">Clear All Data</div></div><button class="btn-sett bs-red" onclick="clearAll()">Clear</button></div>
+      </div>
+    </div>
+    <div class="sett-section">
+      <div class="sett-section-title">Summary</div>
+      <div class="sett-card">
+        <div class="sett-row"><div class="sett-icon si-teal"><span class="mi">inventory_2</span></div><div class="sett-text"><div class="sett-title">Total Items</div></div><span style="font-size:17px;font-weight:800" id="sum2-total">0</span></div>
+        <div class="sett-row"><div class="sett-icon si-teal"><span class="mi">check_circle</span></div><div class="sett-text"><div class="sett-title">Done This Cycle</div></div><span style="font-size:17px;font-weight:800;color:var(--teal)" id="sum2-done">0</span></div>
+        <div class="sett-row"><div class="sett-icon si-red"><span class="mi">warning</span></div><div class="sett-text"><div class="sett-title">Overdue</div></div><span style="font-size:17px;font-weight:800;color:var(--red)" id="sum2-over">0</span></div>
+        <div class="sett-row"><div class="sett-icon si-amber"><span class="mi">inventory</span></div><div class="sett-text"><div class="sett-title">Low Stock</div></div><span style="font-size:17px;font-weight:800;color:var(--amber)" id="sum2-low">0</span></div>
+      </div>
+    </div>
+    <div class="about-box">
+      <div class="about-logo">RENEWAL<b>.</b>LOG</div>
+      <div class="about-ver">Version 4.0 · Layout B · Data stored on device</div>
+      <div class="about-desc">Personal renewal &amp; restock tracker. No account, no server, no subscription.</div>
+    </div>
+  </div>
+</div>
 
-<!-- BOTTOM NAV -->
 <nav id="bottom-nav">
-  <div class="nav-item active">
-    <span class="mi fill">inventory_2</span>
-    Inventory
-  </div>
-  <div class="nav-item">
-    <span class="mi">insert_chart</span>
-    Analytics
-  </div>
-  <div class="nav-item">
-    <span class="mi">event_repeat</span>
-    Schedule
-  </div>
-  <div class="nav-item">
-    <span class="mi">settings</span>
-    Settings
-  </div>
+  <div class="nav-item active" data-page="inventory" onclick="switchPage(this)"><span class="mi">inventory_2</span>Items</div>
+  <div class="nav-item" data-page="analytics" onclick="switchPage(this)"><span class="mi">insert_chart</span>Analytics</div>
+  <div class="nav-item" data-page="schedule" onclick="switchPage(this)"><span class="mi">event_repeat</span>Schedule</div>
+  <div class="nav-item" data-page="settings" onclick="switchPage(this)"><span class="mi">settings</span>Settings</div>
 </nav>
 
-<!-- FAB (mobile) -->
-<button id="fab" onclick="openAdd()">
-  <span class="mi">add</span>
-</button>
+<button id="fab" onclick="openAdd()"><span class="mi">add</span></button>
 
-<!-- ADD / EDIT MODAL -->
-<div id="form-overlay" class="overlay" style="display:none" onclick="overlayClick(event,'form-overlay')">
+<!-- ADD/EDIT MODAL -->
+<div id="form-overlay" class="overlay" style="display:none" onclick="if(event.target===this)closeForm()">
   <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-drag"></div>
+    <div class="modal-handle"></div>
     <div class="modal-inner">
-      <div class="modal-header">
-        <div class="modal-title" id="modal-title">New Item</div>
+      <div class="modal-hdr">
+        <h2 id="modal-title">New Item</h2>
         <button class="btn-close" onclick="closeForm()"><span class="mi">close</span></button>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">Item Name</label>
-        <input id="f-name" class="form-input" type="text" placeholder="e.g. Toothbrush"/>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Category</label>
-        <div class="cat-grid" id="cat-grid"></div>
-      </div>
-
-      <div class="form-row" style="margin-bottom:16px">
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Period</label>
-          <select id="f-period" class="form-input" onchange="onPeriodChange()">
+      <div class="fg"><label class="fl">Item Name</label><input id="f-name" class="fi" type="text" placeholder="e.g. Toothbrush, Credit Card Bill"/></div>
+      <div class="fg"><label class="fl">Category</label><div class="cat-grid" id="cat-grid"></div></div>
+      <div class="mf">
+        <div class="fg"><label class="fl">Next Due Date <span class="fh">when?</span></label><input id="f-due" class="fi" type="date" onchange="updatePreview()"/></div>
+        <div class="fg"><label class="fl">Renew Every <span class="fh">freq</span></label>
+          <select id="f-freq" class="fi" onchange="updatePreview()">
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
             <option value="monthly" selected>Monthly</option>
-            <option value="quarterly">Quarterly</option>
+            <option value="quarterly">Quarterly (3m)</option>
+            <option value="half-yearly">Half-Yearly (6m)</option>
             <option value="yearly">Yearly</option>
-            <option value="specific">Specific Date</option>
           </select>
         </div>
-        <div id="timing-group" class="form-group" style="margin-bottom:0">
-          <label class="form-label">Timing</label>
-          <select id="f-timing" class="form-input">
-            <option value="begin">Beginning</option>
-            <option value="end">End</option>
-          </select>
-        </div>
-        <div id="date-group" class="form-group" style="margin-bottom:0;display:none">
-          <label class="form-label">Date</label>
-          <input id="f-date" class="form-input" type="date"/>
-        </div>
       </div>
-
-      <div class="form-row" style="margin-bottom:16px">
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Stock Count</label>
-          <input id="f-stock" class="form-input" type="number" min="0" placeholder="Leave blank if N/A"/>
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Alert when &le;</label>
-          <input id="f-thresh" class="form-input" type="number" min="0" value="1"/>
-        </div>
+      <div class="fg">
+        <label class="fl">Schedule Preview</label>
+        <div class="sched-preview"><div class="sp-title">Next 5 due dates</div><div class="sp-dates" id="sp-dates"><span style="font-size:11px;color:#b0bfbd">Set a due date first</span></div></div>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">Notes</label>
-        <textarea id="f-notes" class="form-input" rows="2" placeholder="Optional reminder notes…" style="resize:none"></textarea>
+      <div class="mf">
+        <div class="fg"><label class="fl">Stock Count</label><input id="f-stock" class="fi" type="number" min="0" placeholder="Blank = N/A"/></div>
+        <div class="fg"><label class="fl">Alert when ≤</label><input id="f-thresh" class="fi" type="number" min="0" value="1"/></div>
       </div>
-
-      <div class="modal-footer">
-        <button class="btn-cancel" onclick="closeForm()">Cancel</button>
-        <button class="btn-save" id="btn-save" onclick="saveForm()">Save Item</button>
+      <div class="fg"><label class="fl">Notes</label><textarea id="f-notes" class="fi" rows="2" placeholder="Optional notes…" style="resize:none"></textarea></div>
+      <div class="modal-foot">
+        <button class="btn-c" onclick="closeForm()">Cancel</button>
+        <button class="btn-s" id="btn-save" onclick="saveForm()">Save Item</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- DELETE CONFIRM -->
-<div id="del-overlay" class="overlay" style="display:none" onclick="overlayClick(event,'del-overlay')">
+<div id="del-overlay" class="overlay" style="display:none" onclick="if(event.target===this)closeDelete()">
   <div class="del-modal" onclick="event.stopPropagation()">
-    <div class="del-icon"><span class="mi">delete</span></div>
-    <div class="del-title">Delete Item?</div>
-    <div class="del-sub">This action cannot be undone.</div>
+    <div class="del-i"><span class="mi">delete</span></div>
+    <div class="del-t">Delete Item?</div>
+    <div class="del-s">This action cannot be undone.</div>
     <div class="del-btns">
-      <button class="btn-del-cancel" onclick="closeDelete()">Cancel</button>
-      <button class="btn-del-confirm" onclick="confirmDelete()">Delete</button>
+      <button class="btn-del-no" onclick="closeDelete()">Cancel</button>
+      <button class="btn-del-yes" onclick="confirmDelete()">Delete</button>
     </div>
   </div>
 </div>
 
+<div id="toast"></div>
+
 <script>
-// ─────────────────────────────────────────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────────────────────────────────────────
-const CAT = {
-  health:   {icon:'health_and_safety', label:'Health'},
-  hygiene:  {icon:'clean_hands',       label:'Hygiene'},
-  finance:  {icon:'payments',          label:'Finance'},
-  home:     {icon:'home',              label:'Home'},
-  food:     {icon:'restaurant',        label:'Food'},
-  vehicle:  {icon:'directions_car',    label:'Vehicle'},
-  tech:     {icon:'devices',           label:'Tech'},
-  clothing: {icon:'checkroom',         label:'Clothing'},
-  other:    {icon:'inventory_2',       label:'Other'},
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const CAT={
+  health:{icon:'health_and_safety',label:'Health'},
+  hygiene:{icon:'clean_hands',label:'Hygiene'},
+  finance:{icon:'payments',label:'Finance'},
+  home:{icon:'home',label:'Home'},
+  food:{icon:'restaurant',label:'Food'},
+  vehicle:{icon:'directions_car',label:'Vehicle'},
+  tech:{icon:'devices',label:'Tech'},
+  clothing:{icon:'checkroom',label:'Clothing'},
+  other:{icon:'inventory_2',label:'Other'},
 };
-const PERIOD_ORDER = ['daily','weekly','monthly','quarterly','yearly','specific'];
-const PERIOD_LABEL = {daily:'Daily',weekly:'Weekly',monthly:'Monthly',quarterly:'Quarterly',yearly:'Yearly',specific:'Specific'};
+const CAT_EMOJI={health:'🩺',hygiene:'🪥',finance:'💳',home:'🏠',food:'🥫',vehicle:'🚗',tech:'💻',clothing:'👕',other:'📦'};
+const FREQ_ORDER=['daily','weekly','monthly','quarterly','half-yearly','yearly'];
+const FREQ_LABEL={daily:'Daily',weekly:'Weekly',monthly:'Monthly',quarterly:'Quarterly','half-yearly':'Half-Yearly',yearly:'Yearly'};
+const TODAY=toLocalDateStr(new Date());
 
-const TODAY = new Date().toISOString().slice(0,10);
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let items=[], prefs={upcoming:true,showStock:true,sched:true,autodec:true,sort:'due',thresh:1};
+let activeFilter='All', sortBy='due', editId=null, deleteId=null, formCat='hygiene';
+let openDetailId=null;
 
-let items = [];
-let activeFilter = 'All';
-let editId = null;
-let deleteId = null;
-let formCat = 'hygiene';
-
-// Persist
-function loadItems(){
-  try { items = JSON.parse(localStorage.getItem('rl3') || 'null') || defaultItems(); }
-  catch(e){ items = defaultItems(); }
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function loadAll(){
+  try{items=JSON.parse(localStorage.getItem('rl5_items')||'null')||defaultItems();}catch(e){items=defaultItems();}
+  try{
+    const s=JSON.parse(localStorage.getItem('rl5_prefs')||'{}');
+    if(typeof s.stock==='boolean'&&s.showStock===undefined)s.showStock=s.stock;
+    delete s.stock;
+    prefs={...prefs,...s};
+  }catch(e){}
 }
-function saveItems(){ localStorage.setItem('rl3', JSON.stringify(items)); }
-
+function saveItems(){localStorage.setItem('rl5_items',JSON.stringify(items));}
+function savePref(){
+  prefs.upcoming=document.getElementById('pref-upcoming').checked;
+  prefs.autodec=document.getElementById('pref-autodec').checked;
+  prefs.sched=document.getElementById('pref-sched').checked;
+  prefs.sort=document.getElementById('pref-sort').value;
+  prefs.thresh=Number(document.getElementById('pref-thresh').value)||1;
+  localStorage.setItem('rl5_prefs',JSON.stringify(prefs));
+  showToast('Saved ✓');
+}
+function applyPrefs(){
+  document.getElementById('pref-upcoming').checked=prefs.upcoming;
+  document.getElementById('pref-autodec').checked=prefs.autodec;
+  document.getElementById('pref-sched').checked=prefs.sched;
+  document.getElementById('pref-sort').value=prefs.sort;
+  document.getElementById('pref-thresh').value=prefs.thresh;
+  sortBy=prefs.sort;
+  document.querySelector(`.sort-opt[data-sort="${sortBy}"]`)?.classList.add('active');
+}
 function defaultItems(){
+  const nm=(d,m)=>{const x=new Date(d+'T00:00:00');x.setMonth(x.getMonth()+m);return toLocalDateStr(x);};
   return [
-    {id:'1',name:'Toothbrush',category:'hygiene',period:'monthly',timing:'begin',specificDate:'',stock:0,lowStockThreshold:1,lastRenewed:'',notes:'Replace electric head'},
-    {id:'2',name:'Credit Card Bill',category:'finance',period:'monthly',timing:'end',specificDate:'',stock:'',lowStockThreshold:0,lastRenewed:'',notes:'Check all statements'},
-    {id:'3',name:'Multivitamins',category:'health',period:'monthly',timing:'begin',specificDate:'',stock:2,lowStockThreshold:5,lastRenewed:TODAY,notes:'Take with breakfast'},
+    {id:'1',name:'Toothbrush',category:'hygiene',frequency:'monthly',nextDueDate:nm(TODAY,1).slice(0,8)+'01',stock:0,lowStockThreshold:1,lastRenewed:'',prevNextDueDate:null,prevLastRenewed:null,prevStock:undefined,anchorDay:1,notes:'Replace electric head'},
+    {id:'2',name:'Credit Card Bill',category:'finance',frequency:'monthly',nextDueDate:nm(TODAY,0).slice(0,8)+'28',stock:'',lowStockThreshold:0,lastRenewed:'',prevNextDueDate:null,prevLastRenewed:null,prevStock:undefined,anchorDay:28,notes:'Check all statements'},
+    {id:'3',name:'Multivitamins',category:'health',frequency:'monthly',nextDueDate:nm(TODAY,1).slice(0,8)+'01',stock:2,lowStockThreshold:5,lastRenewed:TODAY,prevNextDueDate:nm(TODAY,0).slice(0,8)+'01',prevLastRenewed:'',prevStock:3,anchorDay:1,notes:'Take with breakfast'},
   ];
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DATE LOGIC
-// ─────────────────────────────────────────────────────────────────────────────
-function periodStart(item){
-  const n=new Date(), y=n.getFullYear(), m=n.getMonth();
-  if(item.period==='daily') return TODAY;
-  if(item.period==='weekly'){ const d=new Date(n); d.setDate(d.getDate()-d.getDay()); return d.toISOString().slice(0,10); }
-  if(item.period==='monthly') return new Date(y,m,1).toISOString().slice(0,10);
-  if(item.period==='quarterly'){ const q=Math.floor(m/3); return new Date(y,q*3,1).toISOString().slice(0,10); }
-  if(item.period==='yearly') return y+'-01-01';
-  return item.specificDate || TODAY;
+// ── DATE HELPERS ──────────────────────────────────────────────────────────────
+function toLocalDateStr(d){
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
-
-function currentDue(item){
-  const n=new Date(), y=n.getFullYear(), m=n.getMonth();
-  if(item.period==='daily') return TODAY;
-  if(item.period==='weekly'){
-    const d=new Date(n); d.setDate(d.getDate()-d.getDay()+(item.timing==='end'?6:0));
-    return d.toISOString().slice(0,10);
+function addFreq(dateStr,freq,anchorDay){
+  const d=new Date(dateStr+'T00:00:00');
+  if(freq==='daily'){d.setDate(d.getDate()+1);}
+  else if(freq==='weekly'){d.setDate(d.getDate()+7);}
+  else if(freq==='monthly'||freq==='quarterly'||freq==='half-yearly'){
+    const months=freq==='quarterly'?3:freq==='half-yearly'?6:1;
+    const td=anchorDay||d.getDate();
+    d.setDate(1);d.setMonth(d.getMonth()+months);
+    const ld=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+    d.setDate(Math.min(td,ld));
+  }else if(freq==='yearly'){
+    const td=anchorDay||d.getDate();
+    d.setDate(1);d.setFullYear(d.getFullYear()+1);
+    const ld=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+    d.setDate(Math.min(td,ld));
   }
-  if(item.period==='monthly') return item.timing==='end'
-    ? new Date(y,m+1,0).toISOString().slice(0,10)
-    : new Date(y,m,1).toISOString().slice(0,10);
-  if(item.period==='quarterly'){
-    const q=Math.floor(m/3);
-    return item.timing==='end'
-      ? new Date(y,(q+1)*3,0).toISOString().slice(0,10)
-      : new Date(y,q*3,1).toISOString().slice(0,10);
+  return toLocalDateStr(d);
+}
+function futureSchedule(from,freq,count,anchorDay){
+  const r=[];let d=from;
+  for(let i=0;i<count;i++){r.push(d);d=addFreq(d,freq,anchorDay);}
+  return r;
+}
+const isDone=i=>!!i.lastRenewed&&i.nextDueDate>TODAY;
+const daysUntil=s=>Math.ceil((new Date(s+'T00:00:00')-new Date(TODAY+'T00:00:00'))/86400000);
+const isOverdue=i=>!isDone(i)&&daysUntil(i.nextDueDate)<0;
+const isDueToday=i=>!isDone(i)&&daysUntil(i.nextDueDate)===0;
+const isDueSoon=i=>!isDone(i)&&daysUntil(i.nextDueDate)>0&&daysUntil(i.nextDueDate)<=7;
+const hasStock=i=>i.stock!==''&&i.stock!==null&&i.stock!==undefined;
+const isLow=i=>hasStock(i)&&Number(i.lowStockThreshold||0)>0&&Number(i.stock)<=Number(i.lowStockThreshold);
+const isOOS=i=>hasStock(i)&&Number(i.stock)===0;
+const fmtD=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+const fmtDL=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const dL=n=>n===0?'Today':n===1?'Tomorrow':n<0?Math.abs(n)+'d overdue':'In '+n+'d';
+
+// ── STALE UNDO CLEANUP ────────────────────────────────────────────────────────
+function clearStale(){
+  let ch=false;
+  items=items.map(i=>{
+    if(i.prevNextDueDate&&!isDone(i)){ch=true;return{...i,prevNextDueDate:null,prevLastRenewed:null,prevStock:undefined};}
+    return i;
+  });
+  if(ch)saveItems();
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function switchPage(el){
+  const page=el.dataset.page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  const inv=page==='inventory';
+  document.getElementById('fab').classList.toggle('hidden',!inv);
+  document.getElementById('header-cta').style.display=inv?'':'none';
+  if(page==='analytics')renderAnalytics();
+  if(page==='schedule')renderSchedule();
+  if(page==='settings')renderSettingsSummary();
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+let toastT;
+function showToast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ── FILTER / SORT ─────────────────────────────────────────────────────────────
+function setFilter(el){
+  activeFilter=el.dataset.filter;
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderInventory();
+}
+function jumpFilter(f){
+  document.querySelectorAll('.fchip').forEach(c=>{
+    c.classList.toggle('active',c.dataset.filter===f);
+  });
+  activeFilter=f;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelector('.nav-item[data-page="inventory"]').classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-inventory').classList.add('active');
+  document.getElementById('fab').classList.remove('hidden');
+  document.getElementById('header-cta').style.display='';
+  renderInventory();
+}
+function toggleSort(e){
+  e.stopPropagation();
+  const dd=document.getElementById('sort-dropdown');
+  dd.classList.toggle('open');
+  document.getElementById('sort-btn').classList.toggle('active',dd.classList.contains('open'));
+}
+function setSort(el){
+  sortBy=el.dataset.sort;
+  document.querySelectorAll('.sort-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sort-dropdown').classList.remove('open');
+  document.getElementById('sort-btn').classList.remove('active');
+  renderInventory();
+}
+document.addEventListener('click',e=>{
+  const dd=document.getElementById('sort-dropdown');
+  if(!dd.contains(e.target)&&e.target.id!=='sort-btn'){
+    dd.classList.remove('open');
+    document.getElementById('sort-btn').classList.remove('active');
   }
-  if(item.period==='yearly') return item.timing==='end' ? y+'-12-31' : y+'-01-01';
-  return item.specificDate || TODAY;
-}
+});
 
-function nextDue(item){
-  const n=new Date(), y=n.getFullYear(), m=n.getMonth();
-  if(item.period==='daily'){ const d=new Date(n); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); }
-  if(item.period==='weekly'){
-    const d=new Date(n); d.setDate(d.getDate()-d.getDay()+7+(item.timing==='end'?6:0));
-    return d.toISOString().slice(0,10);
-  }
-  if(item.period==='monthly') return item.timing==='end'
-    ? new Date(y,m+2,0).toISOString().slice(0,10)
-    : new Date(y,m+1,1).toISOString().slice(0,10);
-  if(item.period==='quarterly'){
-    const q=Math.floor(m/3);
-    return item.timing==='end'
-      ? new Date(y,(q+2)*3,0).toISOString().slice(0,10)
-      : new Date(y,(q+1)*3,1).toISOString().slice(0,10);
-  }
-  if(item.period==='yearly') return item.timing==='end' ? (y+1)+'-12-31' : (y+1)+'-01-01';
-  return item.specificDate || TODAY;
-}
-
-function isDone(item){ return !!item.lastRenewed && item.lastRenewed >= periodStart(item); }
-
-function daysUntil(dateStr){
-  return Math.ceil((new Date(dateStr+'T00:00:00') - new Date(TODAY+'T00:00:00')) / 86400000);
-}
-
-function isLow(item){
-  return item.stock !== '' && item.stock !== null && item.stock !== undefined
-    && Number(item.lowStockThreshold||0) > 0
-    && Number(item.stock) <= Number(item.lowStockThreshold);
-}
-function isOOS(item){ return item.stock !== '' && item.stock !== null && Number(item.stock) === 0; }
-
-function fmtDate(str){
-  return new Date(str+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
-}
-function daysLabel(n){
-  if(n===0) return 'today'; if(n===1) return 'tomorrow'; return 'in '+n+' days';
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// RENDER
-// ─────────────────────────────────────────────────────────────────────────────
-function render(){
-  const q   = (document.getElementById('search-input').value||'').toLowerCase();
-  const srt = document.getElementById('sort-select').value;
-
-  // Filter
-  let list = items.filter(item=>{
-    if(q && !item.name.toLowerCase().includes(q) && !(item.notes||'').toLowerCase().includes(q)) return false;
-    if(activeFilter==='Due')       return !isDone(item) && daysUntil(currentDue(item))<=0;
-    if(activeFilter==='Done')      return isDone(item);
-    if(activeFilter==='Low Stock') return isLow(item);
-    if(activeFilter==='Upcoming')  return !isDone(item) && daysUntil(currentDue(item))>0 && daysUntil(currentDue(item))<=7;
+// ── INVENTORY RENDER ──────────────────────────────────────────────────────────
+function renderInventory(){
+  clearStale();
+  const q=(document.getElementById('search-input').value||'').toLowerCase();
+  let list=[...items].filter(item=>{
+    if(q&&!item.name.toLowerCase().includes(q)&&!(item.notes||'').toLowerCase().includes(q))return false;
+    if(activeFilter==='Overdue')return isOverdue(item)||isDueToday(item);
+    if(activeFilter==='Done')return isDone(item);
+    if(activeFilter==='Low Stock')return isLow(item);
+    if(activeFilter==='Due Soon')return isDueSoon(item);
     return true;
   });
-
-  // Sort
   list.sort((a,b)=>{
-    if(srt==='due'){
-      const da = isDone(a)?nextDue(a):currentDue(a);
-      const db = isDone(b)?nextDue(b):currentDue(b);
-      return da.localeCompare(db);
-    }
-    if(srt==='name')   return a.name.localeCompare(b.name);
-    if(srt==='stock')  return (a.stock===''?9999:Number(a.stock))-(b.stock===''?9999:Number(b.stock));
-    if(srt==='period') return PERIOD_ORDER.indexOf(a.period)-PERIOD_ORDER.indexOf(b.period);
-    if(srt==='status'){
-      const sc=x=>isDone(x)?2:daysUntil(currentDue(x))<=0?0:1;
-      return sc(a)-sc(b);
-    }
+    if(sortBy==='due'){const da=isDone(a)?addFreq(a.nextDueDate,a.frequency,a.anchorDay):a.nextDueDate,db=isDone(b)?addFreq(b.nextDueDate,b.frequency,b.anchorDay):b.nextDueDate;return da.localeCompare(db);}
+    if(sortBy==='name')return a.name.localeCompare(b.name);
+    if(sortBy==='stock')return(a.stock===''?9999:Number(a.stock))-(b.stock===''?9999:Number(b.stock));
+    if(sortBy==='freq')return FREQ_ORDER.indexOf(a.frequency)-FREQ_ORDER.indexOf(b.frequency);
+    if(sortBy==='status'){const sc=x=>isOverdue(x)||isDueToday(x)?0:isDone(x)?2:1;return sc(a)-sc(b);}
     return 0;
   });
 
   // Stats
-  const dueC  = items.filter(i=>!isDone(i)&&daysUntil(currentDue(i))<=0).length;
-  const lowC  = items.filter(isLow).length;
-  const doneC = items.filter(isDone).length;
-  document.getElementById('s-total').textContent = items.length;
-  document.getElementById('s-due').textContent   = dueC;
-  document.getElementById('s-due-badge').textContent = dueC>0?'Urgent':'';
-  document.getElementById('s-low').textContent   = lowC;
-  document.getElementById('s-done').textContent  = doneC;
+  const dueC=items.filter(i=>isOverdue(i)||isDueToday(i)).length;
+  const soonC=items.filter(isDueSoon).length;
+  const doneC=items.filter(isDone).length;
+  const lowC=items.filter(isLow).length;
+  document.getElementById('sum-overdue').textContent=dueC;
+  document.getElementById('sum-soon').textContent=soonC;
+  document.getElementById('sum-done').textContent=doneC;
+  document.getElementById('sum-total').textContent=items.length;
+  document.getElementById('sum2-total').textContent=items.length;
+  document.getElementById('sum2-done').textContent=doneC;
+  document.getElementById('sum2-over').textContent=dueC;
+  document.getElementById('sum2-low').textContent=lowC;
 
-  // Build cards
-  const container = document.getElementById('item-list');
+  const container=document.getElementById('item-list');
   if(list.length===0){
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon"><span class="mi">inventory_2</span></div>
-        <div class="empty-title">No items found</div>
-        <div class="empty-sub">Add your first renewal item to get started</div>
-      </div>`;
+    container.innerHTML=`<div class="empty-state"><div class="empty-icon"><span class="mi">inventory_2</span></div><div class="empty-title">No items found</div><div class="empty-sub">Tap + Add Item to get started</div></div>`;
     return;
   }
 
-  container.innerHTML = list.map(item=>{
-    const done    = isDone(item);
-    const due     = currentDue(item);
-    const days    = daysUntil(due);
-    const overdue = !done && days<=0;
-    const upcoming= !done && days>0 && days<=7;
-    const low     = isLow(item);
-    const oos     = isOOS(item);
-    const cat     = CAT[item.category]||CAT.other;
-    const stockNum= (item.stock!==''&&item.stock!==null)?Number(item.stock):null;
-    const thresh  = Number(item.lowStockThreshold||1);
+  // Group items
+  const groups=[
+    {key:'overdue',label:'Overdue & Due Today',cls:'red',items:list.filter(i=>isOverdue(i)||isDueToday(i))},
+    {key:'soon',label:'Due This Week',cls:'amber',items:list.filter(isDueSoon)},
+    {key:'pending',label:'Upcoming',cls:'',items:list.filter(i=>!isOverdue(i)&&!isDueToday(i)&&!isDueSoon(i)&&!isDone(i))},
+    {key:'done',label:'Done This Cycle',cls:'teal',items:list.filter(isDone)},
+  ];
 
-    // Card class
-    let cardClass='card';
-    if(overdue) cardClass+=' overdue';
-    else if(done) cardClass+=' done';
-    else if(upcoming) cardClass+=' upcoming';
-    if(low) cardClass+=' lowstock';
+  let html='';
+  groups.forEach(g=>{
+    if(g.items.length===0)return;
+    html+=`<div class="list-section ${g.cls}">${g.label}<span class="sec-count">${g.items.length}</span></div>`;
+    html+=`<div class="list-wrap">`;
+    g.items.forEach(item=>{
+      html+=renderItem(item);
+    });
+    html+=`</div>`;
+  });
+  container.innerHTML=html;
 
-    // Badges
-    let badges='';
-    if(overdue)   badges+=`<span class="badge badge-overdue">Overdue</span>`;
-    if(done)      badges+=`<span class="badge badge-done">✓ Done</span>`;
-    if(upcoming)  badges+=`<span class="badge badge-upcoming">Due in ${days}d</span>`;
-    if(oos)       badges+=`<span class="badge badge-oos">Out of Stock</span>`;
-    if(low&&!oos) badges+=`<span class="badge badge-low">Low Stock</span>`;
-    badges+=`<span class="badge badge-period">${PERIOD_LABEL[item.period]||item.period}${item.timing&&item.period!=='specific'&&item.period!=='daily'?' · '+item.timing:''}</span>`;
+  // Restore open detail
+  if(openDetailId){
+    const det=document.getElementById('det-'+openDetailId);
+    if(det)det.classList.add('open');
+  }
+}
 
-    // Meta
-    let metaHtml='';
-    if(done){
-      metaHtml=`<div class="card-meta">Renewed ${item.lastRenewed}</div>`;
-      if(item.period!=='specific'){
-        const nd=nextDue(item);
-        const dl=daysLabel(daysUntil(nd));
-        metaHtml+=`<div class="card-next">⟳ Next: ${fmtDate(nd)} (${dl})</div>`;
-      }
-    } else {
-      metaHtml=`<div class="card-meta ${overdue?'':''}">Due: ${due}${overdue?' — Overdue!':''}</div>`;
-    }
-    if(item.notes) metaHtml+=`<div class="card-meta" style="margin-top:2px;font-style:italic;font-size:11px">${item.notes}</div>`;
+function renderItem(item){
+  const done=isDone(item),overdue=isOverdue(item),dueToday=isDueToday(item),dueSoon=isDueSoon(item);
+  const low=isLow(item),oos=isOOS(item),days=daysUntil(item.nextDueDate);
+  const stockNum=hasStock(item)?Number(item.stock):null;
+  const thresh=Number(item.lowStockThreshold||1);
+  const emoji=CAT_EMOJI[item.category]||'📦';
 
-    // Stock section
-    let stockHtml='';
-    if(stockNum!==null){
-      const pct=Math.min(100,Math.round(stockNum/Math.max(stockNum,thresh,1)*100));
-      const labelClass=oos?'oos':low?'low':'';
-      const numClass=oos?'oos':low?'low':'';
-      const fillClass=oos?'oos':low?'low':'';
-      const stockText=oos?`Out of Stock (0 / ${thresh} threshold)`:low?`Low: ${stockNum} left (threshold ${thresh})`:`In Stock: ${stockNum}`;
-      stockHtml=`
-        <div class="stock-section">
-          <div class="stock-top">
-            <span class="stock-label ${labelClass}">${stockText}</span>
-            <div class="stock-controls">
-              <button class="stock-btn" onclick="adjStock('${item.id}',-1)">−</button>
-              <span class="stock-num ${numClass}">${stockNum}</span>
-              <button class="stock-btn" onclick="adjStock('${item.id}',+1)">+</button>
-            </div>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill ${fillClass}" style="width:${oos?0:pct}%"></div>
-          </div>
-        </div>`;
-    }
+  // Check circle class
+  const ccClass=overdue||dueToday?'overdue':done?'done':'';
 
-    // Mark done button
-    const markDoneHtml = done ? '' : `
-      <div class="mark-done-wrap">
-        <button class="btn-mark-done" onclick="markDone('${item.id}')">Mark Done</button>
-      </div>`;
+  // Cat dot class
+  const catClass=overdue||dueToday?'red':dueSoon?'amber':done?'teal':'';
 
-    return `
-      <div class="${cardClass}">
-        <div class="card-inner">
-          <div class="card-top">
-            <div class="card-icon-wrap">
-              <span class="mi fill">${cat.icon}</span>
-            </div>
-            <div class="card-info">
-              <div class="card-name">${item.name}</div>
-              <div class="badge-row">${badges}</div>
-              ${metaHtml}
-            </div>
-            <div class="card-actions">
-              <button class="icon-btn" onclick="openEdit('${item.id}')" title="Edit">
-                <span class="mi">edit</span>
-              </button>
-              <button class="icon-btn danger" onclick="askDelete('${item.id}')" title="Delete">
-                <span class="mi">delete</span>
-              </button>
-            </div>
-          </div>
-          ${stockHtml}
+  // Due pill
+  let pill='';
+  if(done){
+    const nd=addFreq(item.nextDueDate,item.frequency,item.anchorDay);
+    const nd_days=daysUntil(nd);
+    pill=`<span class="due-pill dp-teal">↻ ${fmtD(nd)}</span>`;
+  }else if(overdue){
+    pill=`<span class="due-pill dp-red">${Math.abs(days)}d late</span>`;
+  }else if(dueToday){
+    pill=`<span class="due-pill dp-amber">Today</span>`;
+  }else if(dueSoon){
+    pill=`<span class="due-pill dp-amber">${days}d</span>`;
+  }else{
+    pill=`<span class="due-pill dp-grey">${fmtD(item.nextDueDate)}</span>`;
+  }
+
+  // Stock tag
+  let stockTag='';
+  if(stockNum!==null){
+    const sc=oos?'oos':low?'low':'';
+    stockTag=`<span class="stock-tag ${sc}"><span class="mi" style="font-size:12px">inventory_2</span>${stockNum}</span>`;
+  }
+
+  // Sub text
+  const sub=done
+    ?`✓ ${item.lastRenewed} · ${FREQ_LABEL[item.frequency]}`
+    :`${item.nextDueDate} · ${FREQ_LABEL[item.frequency]}${item.notes?' · '+item.notes:''}`;
+
+  // Swipe actions - done items get undo instead of mark done
+  const swipeLeft=done
+    ?`<div class="swipe-action-btn sab-undo" onclick="undoMarkDone('${item.id}')"><span class="mi fill">undo</span>Undo</div><div class="swipe-action-btn sab-edit" onclick="openEdit('${item.id}')"><span class="mi">edit</span>Edit</div>`
+    :`<div class="swipe-action-btn sab-done" onclick="markDone('${item.id}')"><span class="mi fill">check_circle</span>Done</div><div class="swipe-action-btn sab-delete" onclick="askDelete('${item.id}')"><span class="mi">delete</span>Del</div>`;
+
+  // Detail panel
+  const schedHtml=prefs.sched?(()=>{
+    const dates=futureSchedule(item.nextDueDate,item.frequency,4,item.anchorDay);
+    return `<div class="sched-strip">${dates.map((d,i)=>{
+      const dc=i===0?(overdue||dueToday?'overdue':done?'':'active'):'';
+      return `<span class="sched-chip${dc?' '+dc:''}">${fmtD(d)}</span>`;
+    }).join('')}</div>`;
+  })():'';
+
+  const stockDetailHtml=stockNum!==null?`
+    <div class="detail-row">
+      <span class="detail-label">Stock</span>
+      <div class="stock-controls">
+        <button class="stock-ctrl-btn" onclick="adjStock('${item.id}',-1);event.stopPropagation()">−</button>
+        <span class="stock-val${oos?' oos':low?' low':''}">${stockNum}</span>
+        <button class="stock-ctrl-btn" onclick="adjStock('${item.id}',+1);event.stopPropagation()">+</button>
+        <span style="font-size:11px;color:var(--muted);margin-left:2px">${oos?'Out of stock':low?'Low stock':''}</span>
+      </div>
+    </div>`:'';
+
+  const actionsHtml=done
+    ?`<div class="detail-actions">${item.prevNextDueDate?`<button class="det-btn det-undo" onclick="undoMarkDone('${item.id}')">↩ Undo Done</button>`:''}
+        <button class="det-btn det-edit" onclick="openEdit('${item.id}')">Edit</button>
+        <button class="det-btn det-del" onclick="askDelete('${item.id}')">Delete</button></div>`
+    :`<div class="detail-actions">
+        <button class="det-btn det-done" onclick="markDone('${item.id}')">✓ Mark Done</button>
+        <button class="det-btn det-edit" onclick="openEdit('${item.id}')">Edit</button>
+        <button class="det-btn det-del" onclick="askDelete('${item.id}')">Delete</button></div>`;
+
+  return `
+  <div class="list-item-outer" id="outer-${item.id}">
+    <div class="item-track" id="track-${item.id}"
+      ontouchstart="swipeStart(event,'${item.id}')"
+      ontouchmove="swipeMove(event,'${item.id}')"
+      ontouchend="swipeEnd(event,'${item.id}')">
+      <div class="item-main" onclick="toggleDetail('${item.id}')">
+        <div class="check-circle ${ccClass}" onclick="handleCheck(event,'${item.id}')">
+          <span class="mi">${done?'check':''}</span>
         </div>
-        ${markDoneHtml}
-      </div>`;
-  }).join('');
+        <div class="cat-dot ${catClass}">${emoji}</div>
+        <div class="item-text">
+          <div class="item-name${done?' done':''}">${item.name}</div>
+          <div class="item-sub">${sub}</div>
+        </div>
+        <div class="item-right">
+          ${stockTag}
+          ${pill}
+          <span class="mi chevron-right">chevron_right</span>
+        </div>
+      </div>
+      <div class="swipe-actions">${swipeLeft}</div>
+    </div>
+    <div class="item-detail" id="det-${item.id}">
+      ${item.notes?`<div class="notes-line">${item.notes}</div>`:''}
+      ${schedHtml?`<div class="detail-row"><span class="detail-label">Schedule</span>${schedHtml}</div>`:''}
+      ${stockDetailHtml}
+      ${actionsHtml}
+    </div>
+  </div>`;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FILTER
-// ─────────────────────────────────────────────────────────────────────────────
-function setFilter(btn){
-  activeFilter = btn.dataset.filter;
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');
-  render();
+// ── SWIPE ─────────────────────────────────────────────────────────────────────
+const swipeState={};
+function swipeStart(e,id){
+  swipeState[id]={startX:e.touches[0].clientX,startY:e.touches[0].clientY,moved:false,swiped:false};
+}
+function swipeMove(e,id){
+  const s=swipeState[id]; if(!s)return;
+  const dx=e.touches[0].clientX-s.startX;
+  const dy=e.touches[0].clientY-s.startY;
+  if(!s.moved&&Math.abs(dy)>Math.abs(dx)){return;}
+  s.moved=true;
+  if(dx<-10){
+    e.preventDefault();
+    const t=document.getElementById('track-'+id);
+    if(t)t.style.transform=`translateX(${Math.max(-140,Math.min(0,dx))}px)`;
+  }else if(dx>10&&s.swiped){
+    const t=document.getElementById('track-'+id);
+    if(t)t.style.transform=`translateX(${Math.max(-140,Math.min(0,dx-140))}px)`;
+  }
+}
+function swipeEnd(e,id){
+  const s=swipeState[id]; if(!s)return;
+  const t=document.getElementById('track-'+id); if(!t)return;
+  const dx=e.changedTouches[0].clientX-s.startX;
+  if(dx<-70){t.style.transform='translateX(-140px)';s.swiped=true;}
+  else{t.style.transform='translateX(0)';s.swiped=false;}
+  delete swipeState[id];
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CATEGORY GRID
-// ─────────────────────────────────────────────────────────────────────────────
+// Close swipe on item tap
+function toggleDetail(id){
+  const t=document.getElementById('track-'+id);
+  if(t&&t.style.transform&&t.style.transform!=='translateX(0px)'&&t.style.transform!==''){
+    t.style.transform='translateX(0)'; return;
+  }
+  const det=document.getElementById('det-'+id);
+  if(!det)return;
+  const isOpen=det.classList.contains('open');
+  // Close all others
+  document.querySelectorAll('.item-detail.open').forEach(d=>{if(d!==det)d.classList.remove('open');});
+  det.classList.toggle('open',!isOpen);
+  openDetailId=det.classList.contains('open')?id:null;
+}
+
+function handleCheck(e,id){
+  e.stopPropagation();
+  const item=items.find(i=>i.id===id); if(!item)return;
+  if(isDone(item))undoMarkDone(id);
+  else markDone(id);
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+function markDone(id){
+  items=items.map(i=>{
+    if(i.id!==id)return i;
+    const prevStock=i.stock;
+    const newStock=prefs.autodec&&hasStock(i)?Math.max(0,Number(i.stock)-1):i.stock;
+    return{...i,lastRenewed:TODAY,prevNextDueDate:i.nextDueDate,prevLastRenewed:i.lastRenewed||'',prevStock,
+      nextDueDate:addFreq(i.nextDueDate,i.frequency,i.anchorDay||new Date(i.nextDueDate+'T00:00:00').getDate()),
+      stock:newStock};
+  });
+  saveItems();renderInventory();showToast('Marked done ✓ — swipe to undo');
+}
+function undoMarkDone(id){
+  items=items.map(i=>{
+    if(i.id!==id||!i.prevNextDueDate)return i;
+    return{...i,nextDueDate:i.prevNextDueDate,lastRenewed:i.prevLastRenewed||'',
+      prevNextDueDate:null,prevLastRenewed:null,
+      stock:i.prevStock!==undefined?i.prevStock:(prefs.autodec&&hasStock(i)?Number(i.stock)+1:i.stock),
+      prevStock:undefined};
+  });
+  saveItems();renderInventory();showToast('Undone ↩');
+}
+function adjStock(id,d){
+  items=items.map(i=>i.id!==id?i:{...i,stock:Math.max(0,Number(i.stock===''||i.stock===null?0:i.stock)+d)});
+  saveItems();renderInventory();
+}
+function askDelete(id){deleteId=id;document.getElementById('del-overlay').style.display='flex';}
+function closeDelete(){document.getElementById('del-overlay').style.display='none';deleteId=null;}
+function confirmDelete(){if(deleteId){items=items.filter(i=>i.id!==deleteId);saveItems();renderInventory();showToast('Deleted');}closeDelete();}
+
+// ── CATEGORY GRID ─────────────────────────────────────────────────────────────
 function buildCatGrid(){
-  const grid = document.getElementById('cat-grid');
-  grid.innerHTML = Object.entries(CAT).map(([key,val])=>`
-    <button type="button" class="cat-btn${formCat===key?' active':''}" onclick="selectCat('${key}')">
-      <span class="mi">${val.icon}</span>
-      ${val.label}
+  document.getElementById('cat-grid').innerHTML=Object.entries(CAT).map(([k,v])=>`
+    <button type="button" class="cat-btn${formCat===k?' active':''}" data-cat="${k}" onclick="selectCat('${k}')">
+      <span class="mi">${v.icon}</span>${v.label}
     </button>`).join('');
 }
-
-function selectCat(key){
-  formCat=key;
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.toggle('active',b.onclick.toString().includes("'"+key+"'")));
-  buildCatGrid();
+function selectCat(k){
+  formCat=k;
+  document.querySelectorAll('.cat-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.cat===k);
+    b.querySelector('.mi').style.fontVariationSettings=b.dataset.cat===k?"'FILL' 1,'wght' 400":"'FILL' 0,'wght' 400";
+  });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FORM
-// ─────────────────────────────────────────────────────────────────────────────
-function onPeriodChange(){
-  const p = document.getElementById('f-period').value;
-  document.getElementById('timing-group').style.display = (p==='daily'||p==='specific') ? 'none' : '';
-  document.getElementById('date-group').style.display   = p==='specific' ? '' : 'none';
+// ── SCHEDULE PREVIEW ──────────────────────────────────────────────────────────
+function updatePreview(){
+  const due=document.getElementById('f-due').value;
+  const freq=document.getElementById('f-freq').value;
+  const wrap=document.getElementById('sp-dates');
+  if(!due){wrap.innerHTML='<span style="font-size:11px;color:#b0bfbd">Set a due date first</span>';return;}
+  const anchor=new Date(due+'T00:00:00').getDate();
+  const dates=futureSchedule(due,freq,5,anchor);
+  wrap.innerHTML=dates.map((d,i)=>`<span class="sp-date${i===0?' first':''}">${fmtDL(d)}</span>`).join('');
 }
 
+// ── FORM ──────────────────────────────────────────────────────────────────────
 function openAdd(){
-  editId=null; formCat='hygiene';
+  editId=null;formCat='hygiene';
   document.getElementById('modal-title').textContent='New Item';
   document.getElementById('btn-save').textContent='Save Item';
   document.getElementById('f-name').value='';
-  document.getElementById('f-period').value='monthly';
-  document.getElementById('f-timing').value='begin';
-  document.getElementById('f-date').value='';
+  document.getElementById('f-due').value='';
+  document.getElementById('f-freq').value='monthly';
   document.getElementById('f-stock').value='';
-  document.getElementById('f-thresh').value='1';
+  document.getElementById('f-thresh').value=prefs.thresh||1;
   document.getElementById('f-notes').value='';
-  document.getElementById('f-name').classList.remove('error');
-  onPeriodChange();
-  buildCatGrid();
+  ['f-name','f-due'].forEach(id=>document.getElementById(id).classList.remove('err'));
+  updatePreview();buildCatGrid();
   document.getElementById('form-overlay').style.display='flex';
 }
-
 function openEdit(id){
-  const item = items.find(i=>i.id===id);
-  if(!item) return;
-  editId=id; formCat=item.category;
+  const item=items.find(i=>i.id===id);if(!item)return;
+  editId=id;formCat=item.category;
   document.getElementById('modal-title').textContent='Edit Item';
   document.getElementById('btn-save').textContent='Save Changes';
   document.getElementById('f-name').value=item.name;
-  document.getElementById('f-period').value=item.period;
-  document.getElementById('f-timing').value=item.timing||'begin';
-  document.getElementById('f-date').value=item.specificDate||'';
+  document.getElementById('f-due').value=item.nextDueDate;
+  document.getElementById('f-freq').value=item.frequency;
   document.getElementById('f-stock').value=item.stock===''?'':item.stock;
   document.getElementById('f-thresh').value=item.lowStockThreshold||0;
   document.getElementById('f-notes').value=item.notes||'';
-  document.getElementById('f-name').classList.remove('error');
-  onPeriodChange();
-  buildCatGrid();
+  ['f-name','f-due'].forEach(id=>document.getElementById(id).classList.remove('err'));
+  updatePreview();buildCatGrid();
   document.getElementById('form-overlay').style.display='flex';
 }
-
-function closeForm(){
-  document.getElementById('form-overlay').style.display='none';
-  editId=null;
-}
-
+function closeForm(){document.getElementById('form-overlay').style.display='none';editId=null;}
 function saveForm(){
-  const name = document.getElementById('f-name').value.trim();
-  if(!name){
-    document.getElementById('f-name').classList.add('error');
-    document.getElementById('f-name').focus();
-    return;
-  }
-  document.getElementById('f-name').classList.remove('error');
-
-  const stockVal = document.getElementById('f-stock').value;
-  const obj = {
-    name,
-    category:         formCat,
-    period:           document.getElementById('f-period').value,
-    timing:           document.getElementById('f-timing').value,
-    specificDate:     document.getElementById('f-date').value,
-    stock:            stockVal==='' ? '' : Number(stockVal),
+  const name=document.getElementById('f-name').value.trim();
+  const due=document.getElementById('f-due').value;
+  let ok=true;
+  if(!name){document.getElementById('f-name').classList.add('err');ok=false;}
+  if(!due){document.getElementById('f-due').classList.add('err');ok=false;}
+  if(!ok)return;
+  ['f-name','f-due'].forEach(id=>document.getElementById(id).classList.remove('err'));
+  const sv=document.getElementById('f-stock').value;
+  const anchorDay=new Date(due+'T00:00:00').getDate();
+  const obj={name,category:formCat,frequency:document.getElementById('f-freq').value,
+    nextDueDate:due,anchorDay,stock:sv===''?'':Number(sv),
     lowStockThreshold:Number(document.getElementById('f-thresh').value)||0,
-    notes:            document.getElementById('f-notes').value.trim(),
-  };
-
-  if(editId){
-    items = items.map(i=>i.id===editId ? {...i,...obj} : i);
-  } else {
-    items.push({...obj, id: Date.now().toString(), lastRenewed:''});
-  }
-
-  saveItems();
-  closeForm();
-  render();
+    notes:document.getElementById('f-notes').value.trim()};
+  if(editId){items=items.map(i=>i.id===editId?{...i,...obj}:i);}
+  else{items.push({...obj,id:Date.now().toString(),lastRenewed:'',prevNextDueDate:null,prevLastRenewed:null,prevStock:undefined});}
+  saveItems();closeForm();renderInventory();
+  showToast(editId?'Updated ✓':'Added ✓');
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ACTIONS
-// ─────────────────────────────────────────────────────────────────────────────
-function markDone(id){
-  items = items.map(i=>{
-    if(i.id!==id) return i;
-    const newStock = i.stock!=='' ? Math.max(0,Number(i.stock)-1) : '';
-    return {...i, lastRenewed:TODAY, stock:newStock};
+// ── ANALYTICS ─────────────────────────────────────────────────────────────────
+function renderAnalytics(){
+  const doneC=items.filter(isDone).length;
+  const overdueC=items.filter(i=>isOverdue(i)||isDueToday(i)).length;
+  const weekC=items.filter(i=>!isDone(i)&&daysUntil(i.nextDueDate)>=0&&daysUntil(i.nextDueDate)<=7).length;
+  const stockC=items.filter(hasStock).length;
+  const rate=items.length?Math.round(doneC/items.length*100):0;
+  document.getElementById('a-rate').textContent=rate+'%';
+  document.getElementById('a-rate-bar').style.width=rate+'%';
+  document.getElementById('a-overdue').textContent=overdueC;
+  document.getElementById('a-week').textContent=weekC;
+  document.getElementById('a-stock-n').textContent=stockC;
+  // Category chart
+  const cc={};Object.keys(CAT).forEach(k=>cc[k]=0);
+  items.forEach(i=>{if(cc[i.category]!==undefined)cc[i.category]++;});
+  const mx=Math.max(1,...Object.values(cc));
+  document.getElementById('cat-chart').innerHTML=Object.entries(cc).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="hbar"><div class="hbar-label">${CAT[k].label}</div><div class="hbar-track"><div class="hbar-fill" style="width:${Math.round(v/mx*100)}%"></div></div><div class="hbar-n">${v}</div></div>`).join('')||'<span style="font-size:12px;color:var(--muted)">No items yet</span>';
+  // Donut
+  const dd=[{l:'Adequate',v:items.filter(i=>hasStock(i)&&!isLow(i)).length,c:'#00685f'},
+    {l:'Low Stock',v:items.filter(i=>isLow(i)&&!isOOS(i)).length,c:'#b86e00'},
+    {l:'Out of Stock',v:items.filter(isOOS).length,c:'#c0392b'},
+    {l:'Not Tracked',v:items.filter(i=>!hasStock(i)).length,c:'#e2ecea'}].filter(d=>d.v>0);
+  const tot=dd.reduce((s,d)=>s+d.v,0)||1;
+  const cv=document.getElementById('donut-cv');const cx=cv.getContext('2d');
+  cx.clearRect(0,0,110,110);let ang=-Math.PI/2;
+  dd.forEach(d=>{const sl=2*Math.PI*(d.v/tot);cx.beginPath();cx.moveTo(55,55);cx.arc(55,55,50,ang,ang+sl);cx.closePath();cx.fillStyle=d.c;cx.fill();ang+=sl;});
+  cx.beginPath();cx.arc(55,55,30,0,2*Math.PI);cx.fillStyle='#fff';cx.fill();
+  cx.fillStyle='var(--ink)';cx.font='bold 14px DM Sans,sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText(items.length,55,53);
+  cx.fillStyle='var(--muted)';cx.font='9px DM Sans,sans-serif';cx.fillText('items',55,66);
+  document.getElementById('donut-leg').innerHTML=dd.map(d=>`<div class="leg-item"><div class="leg-dot" style="background:${d.c}"></div>${d.l}: <strong>${d.v}</strong></div>`).join('');
+  // Timeline
+  const t30=items.filter(i=>{const d=daysUntil(i.nextDueDate);return d>=0&&d<=30;}).sort((a,b)=>a.nextDueDate.localeCompare(b.nextDueDate));
+  document.getElementById('tl-list').innerHTML=t30.length?t30.map(item=>{
+    const d=daysUntil(item.nextDueDate);const dc=d===0?'red':d<=3?'amber':'';
+    return`<div class="timeline-item"><div class="tl-date">${fmtD(item.nextDueDate)}</div><div class="tl-dot ${dc}"></div><div style="flex:1"><div class="tl-name">${item.name}</div><div class="tl-sub">${dL(d)} · ${FREQ_LABEL[item.frequency]}</div></div></div>`;
+  }).join(''):'<span style="font-size:12px;color:var(--muted)">Nothing due in the next 30 days</span>';
+}
+
+// ── SCHEDULE ──────────────────────────────────────────────────────────────────
+function renderSchedule(){
+  const container=document.getElementById('schedule-body');
+  if(items.length===0){container.innerHTML='<div class="empty-state"><div class="empty-icon"><span class="mi">event_repeat</span></div><div class="empty-title">No items</div><div class="empty-sub">Add items to see your schedule</div></div>';return;}
+  const events={};
+  items.forEach(item=>{
+    futureSchedule(item.nextDueDate,item.frequency,4,item.anchorDay).forEach(d=>{
+      if(!events[d])events[d]=[];
+      events[d].push(item);
+    });
   });
-  saveItems(); render();
-}
-
-function adjStock(id, delta){
-  items = items.map(i=>{
-    if(i.id!==id) return i;
-    return {...i, stock:Math.max(0,Number(i.stock||0)+delta)};
+  items.filter(isOverdue).forEach(item=>{
+    if(!events[item.nextDueDate])events[item.nextDueDate]=[];
+    if(!events[item.nextDueDate].find(x=>x.id===item.id))events[item.nextDueDate].push(item);
   });
-  saveItems(); render();
+  let html='';
+  Object.keys(events).sort().forEach(dateStr=>{
+    const diff=daysUntil(dateStr);
+    const dayLbl=diff<0?`${Math.abs(diff)}d overdue`:diff===0?'Today':diff===1?'Tomorrow':`In ${diff} days`;
+    const bCls=diff<0?'red':diff===0?'amber':diff<=7?'amber':'grey';
+    const dateDisp=new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    html+=`<div class="sched-group"><div class="sched-date-hdr"><div class="sched-bubble ${bCls}">${dateDisp}</div><span class="sched-days">${dayLbl}</span></div>`;
+    events[dateStr].forEach(item=>{
+      const done2=isDone(item)&&item.nextDueDate===dateStr;
+      const overdue2=isOverdue(item)&&item.nextDueDate===dateStr;
+      const cc=overdue2?'red':done2?'teal':diff<=7?'amber':'';
+      let badge=overdue2?`<span class="sbadge sb-red">Overdue</span>`:done2?`<span class="sbadge sb-done">✓ Done</span>`:diff===0?`<span class="sbadge sb-amber">Today</span>`:diff<=7?`<span class="sbadge sb-amber">${diff}d</span>`:'';
+      html+=`<div class="sched-item ${cc}"><div class="sched-cat">${CAT_EMOJI[item.category]||'📦'}</div><div class="sched-info"><div class="sched-name">${item.name}</div><div class="sched-meta">${FREQ_LABEL[item.frequency]}${item.notes?' · '+item.notes:''}</div></div><div class="sched-bdg">${badge}</div></div>`;
+    });
+    html+='</div>';
+  });
+  container.innerHTML=html;
 }
 
-function askDelete(id){
-  deleteId=id;
-  document.getElementById('del-overlay').style.display='flex';
+// ── SETTINGS SUMMARY ─────────────────────────────────────────────────────────
+function renderSettingsSummary(){
+  const doneC=items.filter(isDone).length,overdueC=items.filter(i=>isOverdue(i)||isDueToday(i)).length,lowC=items.filter(isLow).length;
+  document.getElementById('sum2-total').textContent=items.length;
+  document.getElementById('sum2-done').textContent=doneC;
+  document.getElementById('sum2-over').textContent=overdueC;
+  document.getElementById('sum2-low').textContent=lowC;
 }
-
-function closeDelete(){
-  document.getElementById('del-overlay').style.display='none';
-  deleteId=null;
+function exportData(){
+  const b=new Blob([JSON.stringify({items,exported:new Date().toISOString()},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download='renewal-log-'+TODAY+'.json';a.click();showToast('Exported ✓');
 }
-
-function confirmDelete(){
-  if(deleteId){
-    items = items.filter(i=>i.id!==deleteId);
-    saveItems(); render();
-  }
-  closeDelete();
+function importData(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{try{const d=JSON.parse(ev.target.result);items=d.items||d;if(!Array.isArray(items))throw 0;saveItems();renderInventory();renderSettingsSummary();showToast('Imported '+items.length+' items');}catch{showToast('Invalid file');}e.target.value='';};
+  r.readAsText(f);
 }
+function resetSample(){if(!confirm('Reset to sample data?'))return;items=defaultItems();saveItems();renderInventory();renderSettingsSummary();showToast('Reset ✓');}
+function clearAll(){if(!confirm('Delete ALL items?'))return;items=[];saveItems();renderInventory();renderSettingsSummary();showToast('Cleared');}
 
-function overlayClick(e, overlayId){
-  if(e.target.id===overlayId){
-    if(overlayId==='form-overlay') closeForm();
-    if(overlayId==='del-overlay')  closeDelete();
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────────────────────────────
-document.getElementById('date-label').textContent =
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.getElementById('date-label').textContent=
   new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-
-loadItems();
-render();
+loadAll();applyPrefs();clearStale();renderInventory();
 </script>
 </body>
 </html>
